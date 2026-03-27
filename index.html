@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Para Você ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Quicksand:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== RESET & BASE ===== */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-snap-type: y mandatory;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        background: #0a0a0a;
+        color: #fff;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* ===== SPLASH SCREEN ===== */
+      .splash {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          #1a0a0a 0%,
+          #2d1117 30%,
+          #1a0a0a 70%,
+          #0d0d0d 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        cursor: pointer;
+        transition:
+          opacity 0.8s ease,
+          visibility 0.8s ease;
+      }
+
+      .splash.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .splash-heart {
+        font-size: 4rem;
+        animation: pulse 1.5s ease-in-out infinite;
+        margin-bottom: 2rem;
+      }
+
+      .splash-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.6rem;
+        font-weight: 300;
+        letter-spacing: 0.15em;
+        color: rgba(255, 255, 255, 0.9);
+        text-align: center;
+        padding: 0 2rem;
+      }
+
+      .splash-hint {
+        font-size: 0.8rem;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 3rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        animation: fadeInOut 2.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.15);
+        }
+      }
+
+      @keyframes fadeInOut {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* ===== CONTENT WRAPPER ===== */
+      .content {
+        opacity: 0;
+        transition: opacity 0.6s ease 0.4s;
+      }
+
+      .content.visible {
+        opacity: 1;
+      }
+
+      /* ===== PHOTO SECTIONS ===== */
+      .photo-section {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        overflow: hidden;
+      }
+
+      .photo-section img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .photo-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.1) 0%,
+          rgba(0, 0, 0, 0) 30%,
+          rgba(0, 0, 0, 0) 50%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
+        pointer-events: none;
+      }
+
+      .photo-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 2rem 1.5rem;
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+        z-index: 2;
+      }
+
+      .caption-date {
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 0.5rem;
+      }
+
+      .caption-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.3rem;
+        font-weight: 300;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.95);
+        line-height: 1.5;
+      }
+
+      /* ===== CAPTION ANIMATIONS ===== */
+      .photo-caption {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+
+      .photo-section.in-view .photo-caption {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ===== FINAL DECLARATION SECTION ===== */
+      .declaration-section {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+        background: linear-gradient(
+          160deg,
+          #1a0a0a 0%,
+          #2d1117 25%,
+          #3d1a23 50%,
+          #2d1117 75%,
+          #1a0a0a 100%
+        );
+        overflow: hidden;
+      }
+
+      .declaration-section::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(183, 110, 121, 0.08) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+
+      .declaration-heart {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        opacity: 0;
+        transform: scale(0.5);
+        transition:
+          opacity 1s ease 0.3s,
+          transform 1s ease 0.3s;
+      }
+
+      .declaration-section.in-view .declaration-heart {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .declaration-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2rem;
+        font-weight: 300;
+        letter-spacing: 0.1em;
+        margin-bottom: 2rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.95);
+        opacity: 0;
+        transform: translateY(15px);
+        transition:
+          opacity 1s ease 0.5s,
+          transform 1s ease 0.5s;
+      }
+
+      .declaration-section.in-view .declaration-title {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .declaration-body {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.15rem;
+        font-weight: 300;
+        line-height: 2;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.85);
+        max-width: 340px;
+        opacity: 0;
+        transform: translateY(15px);
+        transition:
+          opacity 1s ease 0.8s,
+          transform 1s ease 0.8s;
+      }
+
+      .declaration-section.in-view .declaration-body {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .declaration-signature {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+        font-style: italic;
+        font-weight: 400;
+        margin-top: 2.5rem;
+        color: rgba(183, 110, 121, 0.9);
+        opacity: 0;
+        transition: opacity 1s ease 1.2s;
+      }
+
+      .declaration-section.in-view .declaration-signature {
+        opacity: 1;
+      }
+
+      .declaration-date {
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.2em;
+        margin-top: 0.8rem;
+        color: rgba(255, 255, 255, 0.35);
+        opacity: 0;
+        transition: opacity 1s ease 1.5s;
+      }
+
+      .declaration-section.in-view .declaration-date {
+        opacity: 1;
+      }
+
+      /* ===== SCROLL INDICATOR ===== */
+      .scroll-indicator {
+        position: fixed;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 50;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      .content.visible .scroll-indicator {
+        opacity: 1;
+      }
+
+      .scroll-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        transition:
+          background 0.3s ease,
+          transform 0.3s ease;
+      }
+
+      .scroll-dot.active {
+        background: rgba(255, 255, 255, 0.9);
+        transform: scale(1.4);
+      }
+
+      /* ===== MUSIC TOGGLE ===== */
+      .music-toggle {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 100;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      .content.visible .music-toggle {
+        opacity: 1;
+      }
+
+      .music-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 14px;
+      }
+
+      .music-bar {
+        width: 2px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 1px;
+        transition: height 0.2s ease;
+      }
+
+      .music-bar:nth-child(1) {
+        height: 6px;
+        animation: bar1 0.8s ease-in-out infinite;
+      }
+      .music-bar:nth-child(2) {
+        height: 10px;
+        animation: bar2 0.7s ease-in-out infinite 0.1s;
+      }
+      .music-bar:nth-child(3) {
+        height: 4px;
+        animation: bar3 0.9s ease-in-out infinite 0.2s;
+      }
+      .music-bar:nth-child(4) {
+        height: 8px;
+        animation: bar4 0.6s ease-in-out infinite 0.15s;
+      }
+
+      .music-toggle.paused .music-bar {
+        animation: none !important;
+        height: 2px !important;
+      }
+
+      @keyframes bar1 {
+        0%,
+        100% {
+          height: 6px;
+        }
+        50% {
+          height: 12px;
+        }
+      }
+      @keyframes bar2 {
+        0%,
+        100% {
+          height: 10px;
+        }
+        50% {
+          height: 4px;
+        }
+      }
+      @keyframes bar3 {
+        0%,
+        100% {
+          height: 4px;
+        }
+        50% {
+          height: 14px;
+        }
+      }
+      @keyframes bar4 {
+        0%,
+        100% {
+          height: 8px;
+        }
+        50% {
+          height: 6px;
+        }
+      }
+
+      /* ===== PROGRESS BAR ===== */
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          rgba(183, 110, 121, 0.6),
+          rgba(219, 166, 166, 0.8)
+        );
+        z-index: 100;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- AUDIO -->
+    <audio id="bgMusic" loop preload="auto">
+      <!-- Coloque o arquivo musica.mp3 na mesma pasta e descomente a linha abaixo: -->
+      <source src="musica.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- SPLASH SCREEN -->
+    <div class="splash" id="splash">
+      <div class="splash-heart">❤️</div>
+      <p class="splash-text">Uma história que é só nossa</p>
+      <span class="splash-hint">toque para começar</span>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- MUSIC TOGGLE -->
+    <button
+      class="music-toggle"
+      id="musicToggle"
+      aria-label="Pausar/Tocar música"
+    >
+      <div class="music-bars">
+        <span class="music-bar"></span>
+        <span class="music-bar"></span>
+        <span class="music-bar"></span>
+        <span class="music-bar"></span>
+      </div>
+    </button>
+
+    <!-- SCROLL INDICATOR DOTS -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content" id="content">
+      <!-- FOTO 1 -->
+      <section class="photo-section" data-index="0">
+        <img
+          src="https://images.unsplash.com/photo-1773167558749-ab4443c75f37?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0"
+          alt="Nossa história"
+          loading="eager"
+        />
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <div class="caption-date">Fevereiro 2026</div>
+          <div class="caption-text">O dia em que tudo começou...</div>
+        </div>
+      </section>
+
+      <!-- FOTO 2 -->
+      <section class="photo-section" data-index="1">
+        <img
+          src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=687&auto=format&fit=crop"
+          alt="Nossa história"
+          loading="lazy"
+        />
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <div class="caption-date">Fevereiro 2026</div>
+          <div class="caption-text">Nosso primeiro encontro</div>
+        </div>
+      </section>
+
+      <!-- FOTO 3 -->
+      <section class="photo-section" data-index="2">
+        <img
+          src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=687&auto=format&fit=crop"
+          alt="Nossa história"
+          loading="lazy"
+        />
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <div class="caption-date">Fevereiro 2026</div>
+          <div class="caption-text">Risadas que não acabam mais</div>
+        </div>
+      </section>
+
+      <!-- FOTO 4 -->
+      <section class="photo-section" data-index="3">
+        <img
+          src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=687&auto=format&fit=crop"
+          alt="Nossa história"
+          loading="lazy"
+        />
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <div class="caption-date">Março 2026</div>
+          <div class="caption-text">Cada momento ao seu lado é especial</div>
+        </div>
+      </section>
+
+      <!-- FOTO 5 -->
+      <section class="photo-section" data-index="4">
+        <img
+          src="https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=687&auto=format&fit=crop"
+          alt="Nossa história"
+          loading="lazy"
+        />
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <div class="caption-date">Março 2026</div>
+          <div class="caption-text">Construindo memórias juntos</div>
+        </div>
+      </section>
+
+      <!-- FOTO 6 -->
+      <section class="photo-section" data-index="5">
+        <img
+          src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=687&auto=format&fit=crop"
+          alt="Nossa história"
+          loading="lazy"
+        />
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <div class="caption-date">Março 2026</div>
+          <div class="caption-text">Você é meu lugar favorito</div>
+        </div>
+      </section>
+
+      <!-- FOTO 7 -->
+      <section class="photo-section" data-index="6">
+        <img
+          src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=687&auto=format&fit=crop"
+          alt="Nossa história"
+          loading="lazy"
+        />
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <div class="caption-date">Março 2026</div>
+          <div class="caption-text">E isso é só o começo...</div>
+        </div>
+      </section>
+
+      <!-- DECLARAÇÃO FINAL -->
+      <section class="declaration-section" data-index="7">
+        <div class="declaration-heart">❤️</div>
+        <h2 class="declaration-title">Meu amor,</h2>
+        <p class="declaration-body">
+          Um mês. Parece tão pouco quando olho no calendário, mas parece uma
+          vida inteira quando olho pra tudo que já vivemos juntos.
+          <br /><br />
+          Você chegou na minha vida e trouxe uma paz que eu nem sabia que
+          precisava. Cada risada, cada abraço, cada silêncio confortável ao seu
+          lado me mostra que eu encontrei algo raro.
+          <br /><br />
+          Eu não sei o que o futuro reserva, mas sei que quero descobrir cada
+          capítulo com você do meu lado.
+          <br /><br />
+          Obrigado por ser você. Obrigado por me escolher.
+          <br /><br />
+          Te amo. Hoje e sempre.
+        </p>
+        <div class="declaration-signature">Com todo meu amor ❤️</div>
+        <div class="declaration-date">27 de Março de 2026 — 1 mês juntos</div>
+      </section>
+    </div>
+
+    <script>
+      // ===== ELEMENTS =====
+      const splash = document.getElementById("splash");
+      const content = document.getElementById("content");
+      const bgMusic = document.getElementById("bgMusic");
+      const musicToggle = document.getElementById("musicToggle");
+      const progressBar = document.getElementById("progressBar");
+      const scrollIndicator = document.getElementById("scrollIndicator");
+      const sections = document.querySelectorAll(
+        ".photo-section, .declaration-section",
+      );
+
+      // ===== CREATE SCROLL DOTS =====
+      sections.forEach((_, i) => {
+        const dot = document.createElement("div");
+        dot.classList.add("scroll-dot");
+        if (i === 0) dot.classList.add("active");
+        scrollIndicator.appendChild(dot);
+      });
+      const dots = document.querySelectorAll(".scroll-dot");
+
+      // ===== SPLASH → START =====
+      splash.addEventListener("click", () => {
+        splash.classList.add("hidden");
+        content.classList.add("visible");
+
+        // Tenta tocar a música
+        bgMusic.play().catch(() => {
+          // Navegador bloqueou — não faz nada, botão de música fica disponível
+          musicToggle.classList.add("paused");
+        });
+
+        // Marca primeira seção como visível
+        sections[0].classList.add("in-view");
+      });
+
+      // ===== MUSIC TOGGLE =====
+      let musicPlaying = true;
+
+      musicToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (bgMusic.paused) {
+          bgMusic.play();
+          musicToggle.classList.remove("paused");
+          musicPlaying = true;
+        } else {
+          bgMusic.pause();
+          musicToggle.classList.add("paused");
+          musicPlaying = false;
+        }
+      });
+
+      // ===== INTERSECTION OBSERVER FOR SECTIONS =====
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.55,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            const index = parseInt(entry.target.dataset.index);
+            dots.forEach((dot, i) => {
+              dot.classList.toggle("active", i === index);
+            });
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach((section) => observer.observe(section));
+
+      // ===== PROGRESS BAR =====
+      window.addEventListener(
+        "scroll",
+        () => {
+          const scrollTop = window.scrollY;
+          const docHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+          const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+          progressBar.style.width = progress + "%";
+        },
+        { passive: true },
+      );
+
+      // ===== PREVENT OVERSCROLL BOUNCE ON iOS =====
+      document.body.style.overscrollBehavior = "none";
+    </script>
+  </body>
+</html>
